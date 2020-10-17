@@ -1,13 +1,17 @@
 package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.study.adsservice.model.Datasource
 import com.study.adsservice.model.Metric
 import com.study.adsservice.model.Summary
+import com.study.adsservice.service.DatasourceMetricsService
 import com.study.adsservice.service.DatasourceService
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
-import org.mockito.Mockito
 import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -30,53 +34,70 @@ class DatasourceMetricsControllerTest {
     @MockBean
     private lateinit var datasourceService: DatasourceService
 
-    private val id = "1"
+    @MockBean
+    private lateinit var metricsService: DatasourceMetricsService
 
-    private val unknownId = "unknown"
+    @Nested
+    inner class GivenExistingDatasource {
 
+        private val id = "1"
+        private val dummyDs = Datasource("","")
 
-    @Test
-    fun `should return metrics for a given datasource`() {
-        val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
-        given(datasourceService.getMetrics(id)).willReturn(Optional.of(metrics))
+        @BeforeEach
+        fun setup() {
+            given(datasourceService.findById(id)).willReturn(Optional.of(dummyDs))
+        }
 
-        mockMvc.perform(get("/datasources/$id/metrics"))
-                .andExpect(content().string(mapper.writeValueAsString(metrics)))
-                .andExpect(status().isOk)
+        @Test
+        fun `should return metrics for a given datasource`() {
+            val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
+            given(metricsService.getMetrics(id)).willReturn(metrics)
 
-        Mockito.verify(datasourceService, times(1)).getMetrics(id)
+            mockMvc.perform(get("/datasources/$id/metrics"))
+                    .andExpect(content().string(mapper.writeValueAsString(metrics)))
+                    .andExpect(status().isOk)
+
+            verify(metricsService, times(1)).getMetrics(id)
+        }
+
+        @Test
+        fun `should return metrics summary for a given datasource`() {
+            val summary = Summary(100,10,10)
+            given(metricsService.getMetricsSummary(id)).willReturn(summary)
+
+            mockMvc.perform(get("/datasources/$id/metrics/summary"))
+                    .andExpect(content().string(mapper.writeValueAsString(summary)))
+                    .andExpect(status().isOk)
+
+            verify(metricsService, times(1)).getMetricsSummary(id)
+        }
     }
 
-    @Test
-    fun `should return not found for unknown datasource`() {
-        given(datasourceService.getMetrics(unknownId)).willReturn(Optional.empty())
+    @Nested
+    inner class GivenNotFoundDatasource {
 
-        mockMvc.perform(get("/datasources/$unknownId/metrics"))
-                .andExpect(status().isNotFound)
+        private val unknownId = "unknown"
 
-        Mockito.verify(datasourceService, times(1)).getMetrics(unknownId)
-    }
+        @BeforeEach
+        fun setup() {
+            given(datasourceService.findById(unknownId)).willReturn(Optional.empty())
+        }
 
-    @Test
-    fun `should return metrics summary for a given datasource`() {
-        val summary = Summary(100,10,10)
-        given(datasourceService.getMetricsSummary(id)).willReturn(Optional.of(summary))
+        @Test
+        fun `should return not found for unknown datasource`() {
+            mockMvc.perform(get("/datasources/$unknownId/metrics"))
+                    .andExpect(status().isNotFound)
 
-        mockMvc.perform(get("/datasources/$id/metrics/summary"))
-                .andExpect(content().string(mapper.writeValueAsString(summary)))
-                .andExpect(status().isOk)
+            verify(metricsService, times(0)).getMetrics(unknownId)
+        }
 
-        Mockito.verify(datasourceService, times(1)).getMetricsSummary(id)
-    }
+        @Test
+        fun `should return not found for unknown datasource summary`() {
+            mockMvc.perform(get("/datasources/$unknownId/metrics/summary"))
+                    .andExpect(status().isNotFound)
 
-    @Test
-    fun `should return not found for unknown datasource summary`() {
-        given(datasourceService.getMetricsSummary(unknownId)).willReturn(Optional.empty())
-
-        mockMvc.perform(get("/datasources/$unknownId/metrics/summary"))
-                .andExpect(status().isNotFound)
-
-        Mockito.verify(datasourceService, times(1)).getMetricsSummary(unknownId)
+            verify(metricsService, times(0)).getMetricsSummary(unknownId)
+        }
     }
 
 }

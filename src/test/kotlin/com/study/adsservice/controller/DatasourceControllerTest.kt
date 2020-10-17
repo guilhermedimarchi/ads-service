@@ -2,8 +2,6 @@ package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.study.adsservice.model.Datasource
-import com.study.adsservice.model.Metric
-import com.study.adsservice.model.Summary
 import com.study.adsservice.service.DatasourceService
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -16,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.Instant
 import java.util.*
 
 @WebMvcTest(DatasourceController::class)
