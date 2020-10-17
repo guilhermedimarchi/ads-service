@@ -1,6 +1,7 @@
 package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.study.adsservice.model.Datasource
 import com.study.adsservice.model.Metric
 import com.study.adsservice.model.Summary
 import com.study.adsservice.service.DatasourceService
@@ -30,14 +31,15 @@ class DatasourceControllerTest {
     @MockBean
     private lateinit var datasourceService: DatasourceService
 
-    private val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
-
     private val id = "1"
 
     private val unknownId = "unknown"
 
+    private val twitterDs = Datasource(id, "Twitter")
+
     @Test
     fun `should return metrics for a given datasource`() {
+        val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
         given(datasourceService.getMetrics(id)).willReturn(Optional.of(metrics))
 
         mockMvc.perform(get("/datasources/$id/metrics"))
@@ -77,6 +79,39 @@ class DatasourceControllerTest {
                 .andExpect(status().isNotFound)
 
         Mockito.verify(datasourceService, times(1)).getMetricsSummary(unknownId)
+    }
+
+    @Test
+    fun `should return list of existing datasources`() {
+        val ds = listOf(twitterDs)
+        given(datasourceService.findAll()).willReturn(ds)
+
+        mockMvc.perform(get("/datasources"))
+                .andExpect(status().isOk)
+                .andExpect(content().string(mapper.writeValueAsString(ds)))
+
+        Mockito.verify(datasourceService, times(1)).findAll()
+    }
+
+    @Test
+    fun `should return datasource if id is valid`() {
+        given(datasourceService.findById(id)).willReturn(Optional.of(twitterDs))
+
+        mockMvc.perform(get("/datasources/$id"))
+                .andExpect(status().isOk)
+                .andExpect(content().string(mapper.writeValueAsString(twitterDs)))
+
+        Mockito.verify(datasourceService, times(1)).findById(id)
+    }
+
+    @Test
+    fun `should return not found if id is unknown`() {
+        given(datasourceService.findById(unknownId)).willReturn(Optional.empty())
+
+        mockMvc.perform(get("/datasources/$unknownId"))
+                .andExpect(status().isNotFound)
+
+        Mockito.verify(datasourceService, times(1)).findById(unknownId)
     }
 
 }
