@@ -32,9 +32,12 @@ class DatasourceControllerTest {
 
     private val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
 
+    private val id = "1"
+
+    private val unknownId = "unknown"
+
     @Test
     fun `should return metrics for a given datasource`() {
-        val id = "1"
         given(datasourceService.getMetrics(id)).willReturn(Optional.of(metrics))
 
         mockMvc.perform(get("/datasources/$id/metrics"))
@@ -45,19 +48,17 @@ class DatasourceControllerTest {
     }
 
     @Test
-    fun `should return not found for unkown datasource`() {
-        val id = "unknown"
-        given(datasourceService.getMetrics(id)).willReturn(Optional.empty())
+    fun `should return not found for unknown datasource`() {
+        given(datasourceService.getMetrics(unknownId)).willReturn(Optional.empty())
 
-        mockMvc.perform(get("/datasources/$id/metrics"))
+        mockMvc.perform(get("/datasources/$unknownId/metrics"))
                 .andExpect(status().isNotFound)
 
-        Mockito.verify(datasourceService, times(1)).getMetrics(id)
+        Mockito.verify(datasourceService, times(1)).getMetrics(unknownId)
     }
 
     @Test
     fun `should return metrics summary for a given datasource`() {
-        val id = "1"
         val summary = Summary(100,10,10)
         given(datasourceService.getMetricsSummary(id)).willReturn(Optional.of(summary))
 
@@ -68,7 +69,15 @@ class DatasourceControllerTest {
         Mockito.verify(datasourceService, times(1)).getMetricsSummary(id)
     }
 
+    @Test
+    fun `should return not found for unknown datasource summary`() {
+        given(datasourceService.getMetricsSummary(unknownId)).willReturn(Optional.empty())
 
+        mockMvc.perform(get("/datasources/$unknownId/metrics/summary"))
+                .andExpect(status().isNotFound)
+
+        Mockito.verify(datasourceService, times(1)).getMetricsSummary(unknownId)
+    }
 
 }
 

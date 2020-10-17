@@ -23,7 +23,10 @@ class DatasourceController(private val datasourceService: DatasourceService) {
     }
 
     @GetMapping("/metrics/summary")
-    fun getMetricsSummary(@PathVariable id: String) : Summary {
-        return datasourceService.getMetricsSummary(id).get()
+    fun getMetricsSummary(@PathVariable id: String) : ResponseEntity<Summary> {
+        val summary = datasourceService.getMetricsSummary(id)
+        if (summary.isPresent)
+            return ResponseEntity.ok(summary.get())
+        return ResponseEntity.notFound().build()
     }
 }
