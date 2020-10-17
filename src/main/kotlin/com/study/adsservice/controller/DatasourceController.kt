@@ -1,6 +1,7 @@
 package com.study.adsservice.controller
 
 import com.study.adsservice.model.Metric
+import com.study.adsservice.model.Summary
 import com.study.adsservice.service.DatasourceService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,4 +22,8 @@ class DatasourceController(private val datasourceService: DatasourceService) {
         return ResponseEntity.notFound().build()
     }
 
+    @GetMapping("/metrics/summary")
+    fun getMetricsSummary(@PathVariable id: String) : Summary {
+        return datasourceService.getMetricsSummary(id).get()
+    }
 }

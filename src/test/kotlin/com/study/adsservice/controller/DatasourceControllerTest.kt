@@ -2,6 +2,7 @@ package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.study.adsservice.model.Metric
+import com.study.adsservice.model.Summary
 import com.study.adsservice.service.DatasourceService
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -54,6 +55,18 @@ class DatasourceControllerTest {
         Mockito.verify(datasourceService, times(1)).getMetrics(id)
     }
 
+    @Test
+    fun `should return metrics summary for a given datasource`() {
+        val id = "1"
+        val summary = Summary(100,10,10)
+        given(datasourceService.getMetricsSummary(id)).willReturn(Optional.of(summary))
+
+        mockMvc.perform(get("/datasources/$id/metrics/summary"))
+                .andExpect(content().string(mapper.writeValueAsString(summary)))
+                .andExpect(status().isOk)
+
+        Mockito.verify(datasourceService, times(1)).getMetricsSummary(id)
+    }
 
 
 
