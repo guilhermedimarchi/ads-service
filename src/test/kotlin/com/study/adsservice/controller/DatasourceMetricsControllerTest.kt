@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.study.adsservice.model.Datasource
 import com.study.adsservice.model.Metric
 import com.study.adsservice.model.Summary
-import com.study.adsservice.service.DatasourceMetricsService
+import com.study.adsservice.service.MetricsService
 import com.study.adsservice.service.DatasourceService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -35,13 +35,13 @@ class DatasourceMetricsControllerTest {
     private lateinit var datasourceService: DatasourceService
 
     @MockBean
-    private lateinit var metricsService: DatasourceMetricsService
+    private lateinit var metricsService: MetricsService
 
     @Nested
     inner class GivenExistingDatasource {
-
         private val id = "1"
         private val dummyDs = Datasource("","")
+        private val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
 
         @BeforeEach
         fun setup() {
@@ -50,9 +50,7 @@ class DatasourceMetricsControllerTest {
 
         @Test
         fun `should return metrics for a given datasource`() {
-            val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
             given(metricsService.getMetrics(id)).willReturn(metrics)
-
             mockMvc.perform(get("/datasources/$id/metrics"))
                     .andExpect(content().string(mapper.writeValueAsString(metrics)))
                     .andExpect(status().isOk)
@@ -60,17 +58,29 @@ class DatasourceMetricsControllerTest {
             verify(metricsService, times(1)).getMetrics(id)
         }
 
+   /*     @Test
+        fun `should accept query parameters when fetching metrics`() {
+            //TODO
+            given(metricsService.getMetrics(id)).willReturn(metrics)
+            mockMvc.perform(get("/datasources/$id/metrics?from=20190127&to=20190315&campaigns=1,2"))
+                    .andExpect(content().string(mapper.writeValueAsString(metrics)))
+                    .andExpect(status().isOk)
+        }
+    */
+
         @Test
         fun `should return metrics summary for a given datasource`() {
             val summary = Summary(100,10,10)
             given(metricsService.getMetricsSummary(id)).willReturn(summary)
 
-            mockMvc.perform(get("/datasources/$id/metrics/summary"))
+            mockMvc.perform(get("/datasources/$id/summary"))
                     .andExpect(content().string(mapper.writeValueAsString(summary)))
                     .andExpect(status().isOk)
 
             verify(metricsService, times(1)).getMetricsSummary(id)
         }
+
+
     }
 
     @Nested
@@ -93,7 +103,7 @@ class DatasourceMetricsControllerTest {
 
         @Test
         fun `should return not found for unknown datasource summary`() {
-            mockMvc.perform(get("/datasources/$unknownId/metrics/summary"))
+            mockMvc.perform(get("/datasources/$unknownId/summary"))
                     .andExpect(status().isNotFound)
 
             verify(metricsService, times(0)).getMetricsSummary(unknownId)

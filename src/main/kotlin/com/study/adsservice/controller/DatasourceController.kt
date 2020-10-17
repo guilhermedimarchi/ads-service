@@ -34,4 +34,5 @@ class DatasourceController(private val datasourceService: DatasourceService) {
             return ResponseEntity.ok(ds.get().campaigns)
         return ResponseEntity.notFound().build()
     }
+
 }

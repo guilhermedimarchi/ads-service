@@ -31,7 +31,7 @@ class DatasourceControllerTest {
     @MockBean
     private lateinit var datasourceService: DatasourceService
 
-    private val twitterDs = Datasource("1", "Twitter", campaigns = listOf(Campaign("1", "Retargeting")))
+    private val twitterDs = Datasource("1", "Twitter")
 
     @Test
     fun `should return list of datasources`() {
@@ -89,8 +89,6 @@ class DatasourceControllerTest {
             mockMvc.perform(get("/datasources/$unknownId/campaigns"))
                     .andExpect(status().isNotFound)
         }
-
-
     }
 }
 

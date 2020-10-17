@@ -2,8 +2,8 @@ package com.study.adsservice.controller
 
 import com.study.adsservice.model.Metric
 import com.study.adsservice.model.Summary
-import com.study.adsservice.service.DatasourceMetricsService
 import com.study.adsservice.service.DatasourceService
+import com.study.adsservice.service.MetricsService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/datasources/{id}")
 class DatasourceMetricsController(private val datasourceService: DatasourceService,
-                                  private val metricsService: DatasourceMetricsService) {
+                                  private val metricsService: MetricsService) {
 
     @GetMapping("/metrics")
     fun getMetrics(@PathVariable id: String) : ResponseEntity<List<Metric>> {
@@ -24,7 +24,7 @@ class DatasourceMetricsController(private val datasourceService: DatasourceServi
         return ResponseEntity.ok(metricsService.getMetrics(id))
     }
 
-    @GetMapping("/metrics/summary")
+    @GetMapping("/summary")
     fun getMetricsSummary(@PathVariable id: String) : ResponseEntity<Summary> {
         if(datasourceService.findById(id).isEmpty)
             return ResponseEntity.notFound().build()
