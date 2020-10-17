@@ -31,55 +31,7 @@ class DatasourceControllerTest {
     @MockBean
     private lateinit var datasourceService: DatasourceService
 
-    private val id = "1"
-
-    private val unknownId = "unknown"
-
-    private val twitterDs = Datasource(id, "Twitter")
-
-    @Test
-    fun `should return metrics for a given datasource`() {
-        val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
-        given(datasourceService.getMetrics(id)).willReturn(Optional.of(metrics))
-
-        mockMvc.perform(get("/datasources/$id/metrics"))
-                .andExpect(content().string(mapper.writeValueAsString(metrics)))
-                .andExpect(status().isOk)
-
-        Mockito.verify(datasourceService, times(1)).getMetrics(id)
-    }
-
-    @Test
-    fun `should return not found for unknown datasource`() {
-        given(datasourceService.getMetrics(unknownId)).willReturn(Optional.empty())
-
-        mockMvc.perform(get("/datasources/$unknownId/metrics"))
-                .andExpect(status().isNotFound)
-
-        Mockito.verify(datasourceService, times(1)).getMetrics(unknownId)
-    }
-
-    @Test
-    fun `should return metrics summary for a given datasource`() {
-        val summary = Summary(100,10,10)
-        given(datasourceService.getMetricsSummary(id)).willReturn(Optional.of(summary))
-
-        mockMvc.perform(get("/datasources/$id/metrics/summary"))
-                .andExpect(content().string(mapper.writeValueAsString(summary)))
-                .andExpect(status().isOk)
-
-        Mockito.verify(datasourceService, times(1)).getMetricsSummary(id)
-    }
-
-    @Test
-    fun `should return not found for unknown datasource summary`() {
-        given(datasourceService.getMetricsSummary(unknownId)).willReturn(Optional.empty())
-
-        mockMvc.perform(get("/datasources/$unknownId/metrics/summary"))
-                .andExpect(status().isNotFound)
-
-        Mockito.verify(datasourceService, times(1)).getMetricsSummary(unknownId)
-    }
+    private val twitterDs = Datasource("1", "Twitter")
 
     @Test
     fun `should return list of existing datasources`() {
@@ -95,6 +47,7 @@ class DatasourceControllerTest {
 
     @Test
     fun `should return datasource if id is valid`() {
+        val id = "1"
         given(datasourceService.findById(id)).willReturn(Optional.of(twitterDs))
 
         mockMvc.perform(get("/datasources/$id"))
@@ -106,6 +59,7 @@ class DatasourceControllerTest {
 
     @Test
     fun `should return not found if id is unknown`() {
+        val unknownId = "unknown"
         given(datasourceService.findById(unknownId)).willReturn(Optional.empty())
 
         mockMvc.perform(get("/datasources/$unknownId"))

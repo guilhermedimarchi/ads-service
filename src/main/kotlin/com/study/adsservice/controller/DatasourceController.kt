@@ -1,8 +1,6 @@
 package com.study.adsservice.controller
 
 import com.study.adsservice.model.Datasource
-import com.study.adsservice.model.Metric
-import com.study.adsservice.model.Summary
 import com.study.adsservice.service.DatasourceService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -28,19 +26,4 @@ class DatasourceController(private val datasourceService: DatasourceService) {
         return ResponseEntity.notFound().build()
     }
 
-    @GetMapping("/{id}/metrics")
-    fun getMetrics(@PathVariable id: String) : ResponseEntity<List<Metric>> {
-        val metrics = datasourceService.getMetrics(id)
-        if (metrics.isPresent)
-            return ResponseEntity.ok(metrics.get())
-        return ResponseEntity.notFound().build()
-    }
-
-    @GetMapping("/{id}/metrics/summary")
-    fun getMetricsSummary(@PathVariable id: String) : ResponseEntity<Summary> {
-        val summary = datasourceService.getMetricsSummary(id)
-        if (summary.isPresent)
-            return ResponseEntity.ok(summary.get())
-        return ResponseEntity.notFound().build()
-    }
 }
