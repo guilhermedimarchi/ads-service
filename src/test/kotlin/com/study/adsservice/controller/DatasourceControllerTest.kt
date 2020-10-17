@@ -1,13 +1,8 @@
 package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.study.adsservice.model.Metric
 import com.study.adsservice.service.DatasourceService
-import com.study.adsservice.service.DateTimeDeserializer
-import com.study.adsservice.service.DateTimeSerializer
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
@@ -20,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.Instant
+import java.util.*
 
 @WebMvcTest(DatasourceController::class)
 class DatasourceControllerTest {
@@ -38,13 +34,28 @@ class DatasourceControllerTest {
     @Test
     fun `should return metrics for a given datasource`() {
         val id = "1"
-        given(datasourceService.getMetrics(id)).willReturn(metrics)
-        val expectedContent = mapper.writeValueAsString(metrics)
+        given(datasourceService.getMetrics(id)).willReturn(Optional.of(metrics))
+
         mockMvc.perform(get("/datasources/$id/metrics"))
-                .andExpect(content().string(expectedContent))
+                .andExpect(content().string(mapper.writeValueAsString(metrics)))
                 .andExpect(status().isOk)
+
         Mockito.verify(datasourceService, times(1)).getMetrics(id)
     }
+
+    @Test
+    fun `should return not found for unkown datasource`() {
+        val id = "unknown"
+        given(datasourceService.getMetrics(id)).willReturn(Optional.empty())
+
+        mockMvc.perform(get("/datasources/$id/metrics"))
+                .andExpect(status().isNotFound)
+
+        Mockito.verify(datasourceService, times(1)).getMetrics(id)
+    }
+
+
+
 
 }
 
