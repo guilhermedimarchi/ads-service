@@ -1,12 +1,15 @@
 package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.study.adsservice.model.Campaign
 import com.study.adsservice.model.Datasource
 import com.study.adsservice.service.DatasourceService
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
-import org.mockito.Mockito.times
+import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -28,10 +31,10 @@ class DatasourceControllerTest {
     @MockBean
     private lateinit var datasourceService: DatasourceService
 
-    private val twitterDs = Datasource("1", "Twitter")
+    private val twitterDs = Datasource("1", "Twitter", campaigns = listOf(Campaign("1", "Retargeting")))
 
     @Test
-    fun `should return list of existing datasources`() {
+    fun `should return list of datasources`() {
         val ds = listOf(twitterDs)
         given(datasourceService.findAll()).willReturn(ds)
 
@@ -39,31 +42,55 @@ class DatasourceControllerTest {
                 .andExpect(status().isOk)
                 .andExpect(content().string(mapper.writeValueAsString(ds)))
 
-        Mockito.verify(datasourceService, times(1)).findAll()
+        verify(datasourceService, times(1)).findAll()
     }
 
-    @Test
-    fun `should return datasource if id is valid`() {
-        val id = "1"
-        given(datasourceService.findById(id)).willReturn(Optional.of(twitterDs))
+    @Nested
+    inner class GivenDatasourceExists {
+        private val id = "1"
 
-        mockMvc.perform(get("/datasources/$id"))
-                .andExpect(status().isOk)
-                .andExpect(content().string(mapper.writeValueAsString(twitterDs)))
+        @BeforeEach
+        fun setup() {
+            given(datasourceService.findById(id)).willReturn(Optional.of(twitterDs))
+        }
 
-        Mockito.verify(datasourceService, times(1)).findById(id)
+        @Test
+        fun `should return datasource if id is valid`() {
+            mockMvc.perform(get("/datasources/$id"))
+                    .andExpect(status().isOk)
+                    .andExpect(content().string(mapper.writeValueAsString(twitterDs)))
+        }
+
+        @Test
+        fun `should return list of campaigns for the datasource`() {
+            mockMvc.perform(get("/datasources/$id/campaigns"))
+                    .andExpect(status().isOk)
+                    .andExpect(content().string(mapper.writeValueAsString(twitterDs.campaigns)))
+        }
     }
 
-    @Test
-    fun `should return not found if id is unknown`() {
-        val unknownId = "unknown"
-        given(datasourceService.findById(unknownId)).willReturn(Optional.empty())
+    @Nested
+    inner class GivenDatasourceDoesNotExists {
+        private val unknownId = "unknown"
 
-        mockMvc.perform(get("/datasources/$unknownId"))
-                .andExpect(status().isNotFound)
+        @BeforeEach
+        fun setup() {
+            given(datasourceService.findById(unknownId)).willReturn(Optional.empty())
+        }
 
-        Mockito.verify(datasourceService, times(1)).findById(unknownId)
+        @Test
+        fun `should return not found if id is unknown`() {
+            mockMvc.perform(get("/datasources/$unknownId"))
+                    .andExpect(status().isNotFound)
+        }
+
+        @Test
+        fun `should return not found when fetching campaigns from unknown datasource id`() {
+            mockMvc.perform(get("/datasources/$unknownId/campaigns"))
+                    .andExpect(status().isNotFound)
+        }
+
+
     }
-
 }
 
