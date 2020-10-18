@@ -2,7 +2,7 @@ package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.study.adsservice.model.Datasource
-import com.study.adsservice.model.Metric
+import com.study.adsservice.model.MetricDTO
 import com.study.adsservice.model.Summary
 import com.study.adsservice.service.DatasourceService
 import com.study.adsservice.service.MetricService
@@ -41,7 +41,7 @@ class DatasourceMetricsControllerTest {
     inner class GivenExistingDatasource {
         private val id = "1"
         private val dummyDs = Datasource("","")
-        private val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
+        private val metrics = listOf(MetricDTO(Instant.ofEpochSecond(1L), 3000, 100))
         private val params = mapOf("from" to "20190127", "to" to "20190315", "campaigns" to "1,2")
         private val summary = Summary(100,10)
 

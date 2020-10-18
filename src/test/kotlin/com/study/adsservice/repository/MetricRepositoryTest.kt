@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDate
 
+
 @SpringBootTest
 @ActiveProfiles("test")
 class MetricRepositoryTest {
@@ -49,4 +50,8 @@ class MetricRepositoryTest {
         assertThat(summary.totalImpressions).isEqualTo(7500)
         assertThat(summary.CTR).isEqualTo(88/7500.0)
     }
+
+
+
+
 }

@@ -2,7 +2,7 @@ package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.study.adsservice.model.Campaign
-import com.study.adsservice.model.Metric
+import com.study.adsservice.model.MetricDTO
 import com.study.adsservice.model.Summary
 import com.study.adsservice.service.CampaignService
 import com.study.adsservice.service.MetricService
@@ -41,7 +41,7 @@ class CampaignMetricsControllerTest {
     inner class GivenExistingCampaign {
         private val id = "1"
         private val dummy = Campaign("","")
-        private val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
+        private val metrics = listOf(MetricDTO(Instant.ofEpochSecond(1L), 3000, 100))
 
         @BeforeEach
         fun setup() {

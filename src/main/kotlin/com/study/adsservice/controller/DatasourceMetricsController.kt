@@ -1,6 +1,6 @@
 package com.study.adsservice.controller
 
-import com.study.adsservice.model.Metric
+import com.study.adsservice.model.MetricDTO
 import com.study.adsservice.model.Summary
 import com.study.adsservice.service.DatasourceService
 import com.study.adsservice.service.MetricService
@@ -14,7 +14,7 @@ class DatasourceMetricsController(private val datasourceService: DatasourceServi
                                   private val metricService: MetricService) {
 
     @GetMapping("/metrics")
-    fun getMetrics(@PathVariable id: String, @RequestParam params: Map<String,String>) : ResponseEntity<List<Metric>> {
+    fun getMetrics(@PathVariable id: String, @RequestParam params: Map<String,String>) : ResponseEntity<List<MetricDTO>> {
         if(datasourceService.findById(id).isEmpty)
             return ResponseEntity.notFound().build()
 

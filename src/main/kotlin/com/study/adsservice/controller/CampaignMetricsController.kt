@@ -1,6 +1,6 @@
 package com.study.adsservice.controller
 
-import com.study.adsservice.model.Metric
+import com.study.adsservice.model.MetricDTO
 import com.study.adsservice.model.Summary
 import com.study.adsservice.service.CampaignService
 import com.study.adsservice.service.MetricService
@@ -17,7 +17,7 @@ class CampaignMetricsController(private val campaignService: CampaignService,
                                 private val metricService: MetricService) {
 
     @GetMapping("/metrics")
-    fun getMetrics(@PathVariable id: String) : ResponseEntity<List<Metric>> {
+    fun getMetrics(@PathVariable id: String) : ResponseEntity<List<MetricDTO>> {
         if(campaignService.findById(id).isEmpty)
             return ResponseEntity.notFound().build()
 
