@@ -13,13 +13,6 @@ import java.time.LocalDate
 @Service
 class MetricService(private val repository: MetricRepository) {
 
-    private final val filterMap = mapOf(
-            "datasourceId" to this::withDatasourceId,
-            "campaignId" to this::withCampaignId,
-            "from" to this::from,
-            "until" to this::until
-    )
-
     fun getMetricsByDatasourceId(dsId: String, params: Map<String, String> = emptyMap()): List<MetricDTO> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -34,6 +27,34 @@ class MetricService(private val repository: MetricRepository) {
 
     fun getMetricsSummaryByCampaignId(campaignId: String): Summary {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun findAllBy(params: Map<String, Any>): List<Metric> {
+        return repository.findAll(FilteredQuery(params).getSpec())
+    }
+}
+
+class FilteredQuery(private val params : Map<String, Any>) {
+
+    private val filterMap = mapOf(
+            "datasourceId" to this::withDatasourceId,
+            "campaignId" to this::withCampaignId,
+            "from" to this::from,
+            "until" to this::until
+    )
+
+    fun getSpec(): Specification<Metric>? {
+        var filters : Specification<Metric>? = null
+
+        for(param in params) {
+            val filter = filterMap[param.key] ?: continue
+            if(filters == null) {
+                filters = filter.call(param.value)
+            } else {
+                filters = filters.and(filter.call(param.value))
+            }
+        }
+        return filters
     }
 
     fun withDatasourceId(id : Long) = Specification<Metric> {
@@ -52,18 +73,5 @@ class MetricService(private val repository: MetricRepository) {
         root, _, cb -> cb.lessThanOrEqualTo(root.get<LocalDate>(Metric::daily.name), date)
     }
 
-    fun findAllBy(params: Map<String, Any>): List<Metric> {
-        var filters : Specification<Metric>? = null
 
-        for(param in params) {
-            val filter = filterMap[param.key] ?: continue
-            if(filters == null) {
-                filters = filter.call(param.value)
-            } else {
-                filters = filters.and(filter.call(param.value))
-            }
-        }
-
-        return repository.findAll(filters)
-    }
 }
