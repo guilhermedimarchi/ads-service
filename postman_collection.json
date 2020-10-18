@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "710ab297-2b6f-4e02-98dd-59e7aa3656db",
+		"name": "AdsService",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get campaigns",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/campaigns",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"campaigns"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get datasources",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/datasources",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"datasources"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get datasource campaigns",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/datasources/1/campaigns",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"datasources",
+						"1",
+						"campaigns"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get metrics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/metrics?datasourceId=1&campaignId=2&from=2019-06-01&until=2019-06-03",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"metrics"
+					],
+					"query": [
+						{
+							"key": "datasourceId",
+							"value": "1"
+						},
+						{
+							"key": "campaignId",
+							"value": "2"
+						},
+						{
+							"key": "from",
+							"value": "2019-06-01"
+						},
+						{
+							"key": "until",
+							"value": "2019-06-03"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get summary",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/metrics/summary?datasourceId=1&campaignId=2&from=2019-06-01&until=2019-06-03",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"metrics",
+						"summary"
+					],
+					"query": [
+						{
+							"key": "datasourceId",
+							"value": "1"
+						},
+						{
+							"key": "campaignId",
+							"value": "2"
+						},
+						{
+							"key": "from",
+							"value": "2019-06-01"
+						},
+						{
+							"key": "until",
+							"value": "2019-06-03"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
