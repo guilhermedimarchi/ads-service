@@ -43,7 +43,7 @@ class DatasourceMetricsControllerTest {
         private val dummyDs = Datasource("","")
         private val metrics = listOf(Metric(Instant.ofEpochSecond(1L), 3000, 100))
         private val params = mapOf("from" to "20190127", "to" to "20190315", "campaigns" to "1,2")
-        private val summary = Summary(100,10,10)
+        private val summary = Summary(100,10)
 
         @BeforeEach
         fun setup() {

@@ -60,7 +60,7 @@ class CampaignMetricsControllerTest {
 
         @Test
         fun `should return metrics summary for a given datasource`() {
-            val summary = Summary(100,10,10)
+            val summary = Summary(100,10)
             given(metricService.getMetricsSummaryByCampaignId(id)).willReturn(summary)
 
             mockMvc.perform(get("/campaigns/$id/summary"))

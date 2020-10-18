@@ -1,7 +1,10 @@
 package com.study.adsservice.model
 
 data class Summary(
-        val totalClicks: Int,
-        val totalImpressions: Int,
-        val CTR: Int
-)
+        val totalClicks: Long,
+        val totalImpressions: Long
+) {
+    val CTR by lazy {
+        (this.totalClicks / this.totalImpressions.toDouble())
+    }
+}

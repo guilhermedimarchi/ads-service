@@ -35,4 +35,18 @@ class MetricRepositoryTest {
         val metrics = repo.findAll()
         assertThat(metrics.size).isEqualTo(15)
     }
+
+    @Test
+    fun `Should return daily metrics by datasourceId`() {
+        val metrics = repo.findByDatasourceId(1L)
+        assertThat(metrics.size).isEqualTo(10)
+    }
+
+    @Test
+    fun `Should return summary by datasourceId`() {
+        val summary = repo.getMetricsSummaryByDatasourceId(1L)
+        assertThat(summary.totalClicks).isEqualTo(88)
+        assertThat(summary.totalImpressions).isEqualTo(7500)
+        assertThat(summary.CTR).isEqualTo(88/7500.0)
+    }
 }
