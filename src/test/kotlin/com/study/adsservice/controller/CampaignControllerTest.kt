@@ -1,7 +1,7 @@
 package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.study.adsservice.model.Campaign
+import com.study.adsservice.model.CampaignDTO
 import com.study.adsservice.service.CampaignService
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -28,7 +28,7 @@ class CampaignControllerTest {
     @MockBean
     private lateinit var campaignService: CampaignService
 
-    private val campaign = Campaign("1", "Retargeting")
+    private val campaign = CampaignDTO("1", "Retargeting")
 
     @Test
     fun `should return list of campaign`() {
@@ -44,7 +44,7 @@ class CampaignControllerTest {
 
     @Test
     fun `should return campaign if id exists`() {
-        val id = "1"
+        val id = 1L
         given(campaignService.findById(id)).willReturn(Optional.of(campaign))
 
         mockMvc.perform(MockMvcRequestBuilders.get("/campaigns/$id"))
@@ -56,7 +56,7 @@ class CampaignControllerTest {
 
     @Test
     fun `should return not found if campaign id does not exists`() {
-        val id = "unknown"
+        val id = -1L
         given(campaignService.findById(id)).willReturn(Optional.empty())
 
         mockMvc.perform(MockMvcRequestBuilders.get("/campaigns/$id"))

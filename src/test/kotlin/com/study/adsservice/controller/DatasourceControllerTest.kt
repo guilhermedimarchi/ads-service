@@ -1,7 +1,7 @@
 package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.study.adsservice.model.Datasource
+import com.study.adsservice.model.DatasourceDTO
 import com.study.adsservice.service.DatasourceService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -30,7 +30,7 @@ class DatasourceControllerTest {
     @MockBean
     private lateinit var datasourceService: DatasourceService
 
-    private val twitterDs = Datasource("1", "Twitter")
+    private val twitterDs = DatasourceDTO("1", "Twitter")
 
     @Test
     fun `should return list of datasources`() {
@@ -46,7 +46,7 @@ class DatasourceControllerTest {
 
     @Nested
     inner class GivenDatasourceExists {
-        private val id = "1"
+        private val id = 1L
 
         @BeforeEach
         fun setup() {
@@ -70,7 +70,7 @@ class DatasourceControllerTest {
 
     @Nested
     inner class GivenDatasourceDoesNotExists {
-        private val unknownId = "unknown"
+        private val unknownId = -1L
 
         @BeforeEach
         fun setup() {

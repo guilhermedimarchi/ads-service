@@ -1,6 +1,6 @@
 package com.study.adsservice.controller
 
-import com.study.adsservice.model.Campaign
+import com.study.adsservice.model.CampaignDTO
 import com.study.adsservice.service.CampaignService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController
 class CampaignController (private val campaignService: CampaignService){
 
     @GetMapping
-    fun getCampaigns() : ResponseEntity<List<Campaign>> {
+    fun getCampaigns() : ResponseEntity<List<CampaignDTO>> {
         return ResponseEntity.ok(campaignService.findAll())
     }
 
     @GetMapping("/{id}")
-    fun getCampaignsById(@PathVariable id: String) : ResponseEntity<Campaign> {
+    fun getCampaignsById(@PathVariable id: Long) : ResponseEntity<CampaignDTO> {
         val c = campaignService.findById(id)
         if (c.isPresent)
             return ResponseEntity.ok(c.get())

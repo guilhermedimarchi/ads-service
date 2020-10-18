@@ -3,7 +3,7 @@ package com.study.adsservice.service
 
 
 import com.study.adsservice.model.MetricDTO
-import com.study.adsservice.model.Summary
+import com.study.adsservice.model.SummaryDTO
 import com.study.adsservice.repository.MetricRepository
 import com.study.adsservice.repository.queryspec.MetricQueryFilter
 import org.springframework.stereotype.Service
@@ -16,7 +16,7 @@ class MetricService(private val repository: MetricRepository) {
         return MetricDTO.fromList(metrics)
     }
 
-    fun getSummaryBy(params: Map<String, String>): Summary {
+    fun getSummaryBy(params: Map<String, String>): SummaryDTO {
         val metrics = repository.findAll(MetricQueryFilter(params).build())
         var totalClicks = 0L
         var totalImpressions = 0L
@@ -26,6 +26,6 @@ class MetricService(private val repository: MetricRepository) {
             totalImpressions += m.impressions
         }
 
-        return Summary(totalClicks,totalImpressions)
+        return SummaryDTO(totalClicks,totalImpressions)
     }
 }

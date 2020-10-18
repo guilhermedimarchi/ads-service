@@ -1,7 +1,7 @@
 package com.study.adsservice.controller
 
 import com.study.adsservice.model.MetricDTO
-import com.study.adsservice.model.Summary
+import com.study.adsservice.model.SummaryDTO
 import com.study.adsservice.service.DatasourceService
 import com.study.adsservice.service.MetricService
 import org.springframework.http.ResponseEntity
@@ -14,20 +14,20 @@ class DatasourceMetricsController(private val datasourceService: DatasourceServi
                                   private val metricService: MetricService) {
 
     @GetMapping("/metrics")
-    fun getMetrics(@PathVariable id: String, @RequestParam params: MutableMap<String,String>) : ResponseEntity<List<MetricDTO>> {
+    fun getMetrics(@PathVariable id: Long, @RequestParam params: MutableMap<String,String>) : ResponseEntity<List<MetricDTO>> {
         if(datasourceService.findById(id).isEmpty)
             return ResponseEntity.notFound().build()
 
-        params["datasourceId"] = id
+        params["datasourceId"] = id.toString()
         return ResponseEntity.ok(metricService.findAllBy(params))
     }
 
     @GetMapping("/summary")
-    fun getMetricsSummary(@PathVariable id: String, @RequestParam params: MutableMap<String,String>) : ResponseEntity<Summary> {
+    fun getMetricsSummary(@PathVariable id: Long, @RequestParam params: MutableMap<String,String>) : ResponseEntity<SummaryDTO> {
         if(datasourceService.findById(id).isEmpty)
             return ResponseEntity.notFound().build()
 
-        params["datasourceId"] = id
+        params["datasourceId"] = id.toString()
         return ResponseEntity.ok(metricService.getSummaryBy(params))
     }
 }

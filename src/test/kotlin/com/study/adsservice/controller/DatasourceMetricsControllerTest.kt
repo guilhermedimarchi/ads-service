@@ -1,9 +1,9 @@
 package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.study.adsservice.model.Datasource
+import com.study.adsservice.model.DatasourceDTO
 import com.study.adsservice.model.MetricDTO
-import com.study.adsservice.model.Summary
+import com.study.adsservice.model.SummaryDTO
 import com.study.adsservice.service.DatasourceService
 import com.study.adsservice.service.MetricService
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 
@@ -40,11 +39,11 @@ class DatasourceMetricsControllerTest {
 
     @Nested
     inner class GivenExistingDatasource {
-        private val id = "1"
-        private val dummyDs = Datasource("","")
+        private val id = 1L
+        private val dummyDs = DatasourceDTO("","")
         private val metrics = listOf(MetricDTO("Facebook", "Sales", LocalDate.now(), 3000, 100))
         private val params = mapOf("datasourceId" to "1", "from" to "2019-01-27", "to" to "2019-03-15", "campaign" to "1")
-        private val summary = Summary(100,10)
+        private val summary = SummaryDTO(100,10)
 
         @BeforeEach
         fun setup() {
@@ -97,7 +96,7 @@ class DatasourceMetricsControllerTest {
     @Nested
     inner class GivenNotFoundDatasource {
 
-        private val unknownId = "unknown"
+        private val unknownId = -1L
 
         @BeforeEach
         fun setup() {

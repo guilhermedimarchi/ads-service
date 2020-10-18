@@ -1,16 +1,22 @@
 package com.study.adsservice.service
 
-import com.study.adsservice.model.Campaign
+import com.study.adsservice.model.CampaignDTO
+import com.study.adsservice.repository.CampaignRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class CampaignService {
-    fun findAll(): List<Campaign> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class CampaignService(private val repository: CampaignRepository) {
+
+    fun findAll(): List<CampaignDTO> {
+        val campaigns = repository.findAll()
+        return CampaignDTO.fromList(campaigns)
     }
 
-    fun findById(id: String): Optional<Campaign> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun findById(id: Long): Optional<CampaignDTO> {
+        val campaign = repository.findById(id)
+        if(campaign.isEmpty)
+            return Optional.empty()
+        return Optional.of(CampaignDTO.fromCampaign(campaign.get()))
     }
 }

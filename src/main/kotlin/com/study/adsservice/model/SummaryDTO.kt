@@ -1,6 +1,6 @@
 package com.study.adsservice.model
 
-data class Summary(
+data class SummaryDTO(
         val totalClicks: Long,
         val totalImpressions: Long
 ) {
