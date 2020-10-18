@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.Instant
+import java.time.LocalDate
 import java.util.*
 
 @WebMvcTest(DatasourceMetricsController::class)
@@ -41,8 +42,8 @@ class DatasourceMetricsControllerTest {
     inner class GivenExistingDatasource {
         private val id = "1"
         private val dummyDs = Datasource("","")
-        private val metrics = listOf(MetricDTO(Instant.ofEpochSecond(1L), 3000, 100))
-        private val params = mapOf("from" to "20190127", "to" to "20190315", "campaigns" to "1,2")
+        private val metrics = listOf(MetricDTO("Facebook", "Sales", LocalDate.now(), 3000, 100))
+        private val params = mapOf("datasourceId" to "1", "from" to "2019-01-27", "to" to "2019-03-15", "campaign" to "1")
         private val summary = Summary(100,10)
 
         @BeforeEach
@@ -52,44 +53,44 @@ class DatasourceMetricsControllerTest {
 
         @Test
         fun `should return metrics for a given datasource`() {
-            given(metricService.getMetricsByDatasourceId(id)).willReturn(metrics)
+            given(metricService.findAllBy(mapOf("datasourceId" to "1"))).willReturn(metrics)
             mockMvc.perform(get("/datasources/$id/metrics"))
                     .andExpect(content().string(mapper.writeValueAsString(metrics)))
                     .andExpect(status().isOk)
 
-            verify(metricService, times(1)).getMetricsByDatasourceId(id)
+            verify(metricService, times(1)).findAllBy(mapOf("datasourceId" to "1"))
         }
 
         @Test
         fun `should accept query parameters when fetching metrics`() {
-            given(metricService.getMetricsByDatasourceId(id, params)).willReturn(metrics)
-            mockMvc.perform(get("/datasources/$id/metrics?from=20190127&to=20190315&campaigns=1,2"))
+            given(metricService.findAllBy(params)).willReturn(metrics)
+            mockMvc.perform(get("/datasources/$id/metrics?from=2019-01-27&to=2019-03-15&campaign=1"))
                     .andExpect(content().string(mapper.writeValueAsString(metrics)))
                     .andExpect(status().isOk)
 
-            verify(metricService).getMetricsByDatasourceId(id, params)
+            verify(metricService).findAllBy(params)
         }
 
         @Test
         fun `should return metrics summary for a given datasource`() {
-            given(metricService.getMetricsSummaryByDatasourceId(id)).willReturn(summary)
+            given(metricService.getSummaryBy(mapOf("datasourceId" to "1"))).willReturn(summary)
 
             mockMvc.perform(get("/datasources/$id/summary"))
                     .andExpect(content().string(mapper.writeValueAsString(summary)))
                     .andExpect(status().isOk)
 
-            verify(metricService, times(1)).getMetricsSummaryByDatasourceId(id)
+            verify(metricService, times(1)).getSummaryBy(mapOf("datasourceId" to "1"))
         }
 
         @Test
         fun `should accept query parameters when fetching summary`() {
-            given(metricService.getMetricsSummaryByDatasourceId(id, params)).willReturn(summary)
+            given(metricService.getSummaryBy(params)).willReturn(summary)
 
-            mockMvc.perform(get("/datasources/$id/summary?from=20190127&to=20190315&campaigns=1,2"))
+            mockMvc.perform(get("/datasources/$id/summary?from=2019-01-27&to=2019-03-15&campaign=1"))
                     .andExpect(content().string(mapper.writeValueAsString(summary)))
                     .andExpect(status().isOk)
 
-            verify(metricService, times(1)).getMetricsSummaryByDatasourceId(id, params)
+            verify(metricService, times(1)).getSummaryBy(params)
         }
     }
 
@@ -108,7 +109,7 @@ class DatasourceMetricsControllerTest {
             mockMvc.perform(get("/datasources/$unknownId/metrics"))
                     .andExpect(status().isNotFound)
 
-            verify(metricService, times(0)).getMetricsByDatasourceId(unknownId)
+            verify(metricService, times(0)).findAllBy(mapOf("datasource" to "$unknownId"))
         }
 
         @Test
@@ -116,7 +117,7 @@ class DatasourceMetricsControllerTest {
             mockMvc.perform(get("/datasources/$unknownId/summary"))
                     .andExpect(status().isNotFound)
 
-            verify(metricService, times(0)).getMetricsSummaryByDatasourceId(unknownId)
+            verify(metricService, times(0)).getSummaryBy(mapOf("datasource" to "$unknownId"))
         }
     }
 }

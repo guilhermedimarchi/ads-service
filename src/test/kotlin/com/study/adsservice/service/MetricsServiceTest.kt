@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter.ofPattern
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -17,28 +15,28 @@ class MetricsServiceTest {
 
     @Test
     fun `should return metrics given a datasourceId`() {
-        val params = mapOf("datasourceId" to 1L)
+        val params = mapOf("datasourceId" to "1")
         val metrics = metricService.findAllBy(params)
         assertThat(metrics.size).isEqualTo(10)
     }
 
     @Test
     fun `should return metrics given a campaignId`() {
-        val params = mapOf("campaignId" to 1L)
+        val params = mapOf("campaignId" to "1")
         val metrics = metricService.findAllBy(params)
         assertThat(metrics.size).isEqualTo(5)
     }
 
     @Test
     fun `should return metrics given a start date`() {
-        val params = mapOf("from" to LocalDate.parse("2019-06-04", ofPattern("yyyy-MM-dd")))
+        val params = mapOf("from" to "2019-06-04")
         val metrics = metricService.findAllBy(params)
         assertThat(metrics.size).isEqualTo(6)
     }
 
     @Test
     fun `should return metrics until a given date`() {
-        val params = mapOf("until" to LocalDate.parse("2019-06-03", ofPattern("yyyy-MM-dd")))
+        val params = mapOf("until" to "2019-06-03")
         val metrics = metricService.findAllBy(params)
         assertThat(metrics.size).isEqualTo(9)
     }
@@ -46,13 +44,23 @@ class MetricsServiceTest {
     @Test
     fun `should return metrics given multiple filters`() {
         val params = mapOf(
-                "datasourceId" to 1L,
-                "campaignId" to 1L,
-                "from" to LocalDate.parse("2019-06-02", ofPattern("yyyy-MM-dd")),
-                "until" to LocalDate.parse("2019-06-04", ofPattern("yyyy-MM-dd"))
+                "datasourceId" to "1",
+                "campaignId" to "1",
+                "from" to "2019-06-02",
+                "until" to "2019-06-04"
         )
         val metrics = metricService.findAllBy(params)
         assertThat(metrics.size).isEqualTo(3)
     }
+
+    @Test
+    fun `Should return summary`() {
+        val params = mapOf("datasourceId" to "1")
+        val summary = metricService.getSummaryBy(params)
+        assertThat(summary.totalClicks).isEqualTo(88)
+        assertThat(summary.totalImpressions).isEqualTo(7500)
+        assertThat(summary.CTR).isEqualTo(88/7500.0)
+    }
+
 
 }

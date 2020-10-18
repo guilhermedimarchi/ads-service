@@ -14,18 +14,20 @@ class DatasourceMetricsController(private val datasourceService: DatasourceServi
                                   private val metricService: MetricService) {
 
     @GetMapping("/metrics")
-    fun getMetrics(@PathVariable id: String, @RequestParam params: Map<String,String>) : ResponseEntity<List<MetricDTO>> {
+    fun getMetrics(@PathVariable id: String, @RequestParam params: MutableMap<String,String>) : ResponseEntity<List<MetricDTO>> {
         if(datasourceService.findById(id).isEmpty)
             return ResponseEntity.notFound().build()
 
-        return ResponseEntity.ok(metricService.getMetricsByDatasourceId(id, params))
+        params["datasourceId"] = id
+        return ResponseEntity.ok(metricService.findAllBy(params))
     }
 
     @GetMapping("/summary")
-    fun getMetricsSummary(@PathVariable id: String, @RequestParam params: Map<String,String>) : ResponseEntity<Summary> {
+    fun getMetricsSummary(@PathVariable id: String, @RequestParam params: MutableMap<String,String>) : ResponseEntity<Summary> {
         if(datasourceService.findById(id).isEmpty)
             return ResponseEntity.notFound().build()
 
-        return ResponseEntity.ok(metricService.getMetricsSummaryByDatasourceId(id, params))
+        params["datasourceId"] = id
+        return ResponseEntity.ok(metricService.getSummaryBy(params))
     }
 }
