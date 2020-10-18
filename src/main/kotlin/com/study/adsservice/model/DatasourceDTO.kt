@@ -8,7 +8,7 @@ data class DatasourceDTO(
         val campaigns: List<CampaignDTO> = mutableListOf()
 ) {
     companion object {
-        fun fromCampaign(datasource : Datasource) : DatasourceDTO {
+        fun fromDatasource(datasource : Datasource) : DatasourceDTO {
             return DatasourceDTO(
                     id = datasource.id.toString(),
                     name = datasource.name
@@ -17,7 +17,7 @@ data class DatasourceDTO(
         fun fromList(datasources: List<Datasource>) : List<DatasourceDTO> {
             val list = mutableListOf<DatasourceDTO>()
             datasources.forEach {
-                list.add(fromCampaign(it))
+                list.add(fromDatasource(it))
             }
             return list
         }

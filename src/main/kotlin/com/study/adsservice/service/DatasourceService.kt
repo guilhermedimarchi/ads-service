@@ -2,16 +2,22 @@ package com.study.adsservice.service
 
 
 import com.study.adsservice.model.DatasourceDTO
+import com.study.adsservice.repository.DatasourceRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class DatasourceService {
+class DatasourceService(private val repository: DatasourceRepository) {
+
     fun findAll(): List<DatasourceDTO> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val datasources = repository.findAll()
+        return DatasourceDTO.fromList(datasources)
     }
 
     fun findById(id: Long): Optional<DatasourceDTO> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val datasource = repository.findById(id)
+        if(datasource.isEmpty)
+            return Optional.empty()
+        return Optional.of(DatasourceDTO.fromDatasource(datasource.get()))
     }
 }
