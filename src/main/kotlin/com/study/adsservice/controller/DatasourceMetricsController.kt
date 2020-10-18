@@ -5,10 +5,7 @@ import com.study.adsservice.model.Summary
 import com.study.adsservice.service.DatasourceService
 import com.study.adsservice.service.MetricsService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -17,18 +14,18 @@ class DatasourceMetricsController(private val datasourceService: DatasourceServi
                                   private val metricsService: MetricsService) {
 
     @GetMapping("/metrics")
-    fun getMetrics(@PathVariable id: String) : ResponseEntity<List<Metric>> {
+    fun getMetrics(@PathVariable id: String, @RequestParam params: Map<String,String>) : ResponseEntity<List<Metric>> {
         if(datasourceService.findById(id).isEmpty)
             return ResponseEntity.notFound().build()
 
-        return ResponseEntity.ok(metricsService.getMetrics(id))
+        return ResponseEntity.ok(metricsService.getMetricsByDatasourceId(id, params))
     }
 
     @GetMapping("/summary")
-    fun getMetricsSummary(@PathVariable id: String) : ResponseEntity<Summary> {
+    fun getMetricsSummary(@PathVariable id: String, @RequestParam params: Map<String,String>) : ResponseEntity<Summary> {
         if(datasourceService.findById(id).isEmpty)
             return ResponseEntity.notFound().build()
 
-        return ResponseEntity.ok(metricsService.getMetricsSummary(id))
+        return ResponseEntity.ok(metricsService.getMetricsSummaryByDatasourceId(id, params))
     }
 }
