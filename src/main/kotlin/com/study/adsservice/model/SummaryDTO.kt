@@ -5,6 +5,7 @@ data class SummaryDTO(
         val totalImpressions: Long
 ) {
     val CTR by lazy {
-        (this.totalClicks / this.totalImpressions.toDouble())
+        if (this.totalImpressions == 0L) 0
+        else (this.totalClicks / this.totalImpressions.toDouble())
     }
 }
