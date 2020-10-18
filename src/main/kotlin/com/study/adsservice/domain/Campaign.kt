@@ -12,5 +12,5 @@ data class Campaign(
 )
 {
     @ManyToMany(mappedBy = "campaigns", fetch = FetchType.EAGER)
-    val datasources: MutableSet<Datasource> = HashSet()
+    val datasources: List<Datasource> = mutableListOf()
 }

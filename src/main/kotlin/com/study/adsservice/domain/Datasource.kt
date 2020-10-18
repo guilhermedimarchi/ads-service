@@ -16,7 +16,7 @@ data class Datasource(
     @JoinTable(name = "datasource_campaign",
                joinColumns = [JoinColumn(name = "datasource_id")],
                inverseJoinColumns = [JoinColumn(name = "campaign_id")])
-    val campaigns: MutableSet<Campaign> = HashSet()
+    val campaigns: List<Campaign> = mutableListOf()
 }
 
 

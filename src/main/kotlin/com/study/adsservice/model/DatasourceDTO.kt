@@ -11,7 +11,8 @@ data class DatasourceDTO(
         fun fromDatasource(datasource : Datasource) : DatasourceDTO {
             return DatasourceDTO(
                     id = datasource.id.toString(),
-                    name = datasource.name
+                    name = datasource.name,
+                    campaigns = CampaignDTO.fromList(datasource.campaigns)
             )
         }
         fun fromList(datasources: List<Datasource>) : List<DatasourceDTO> {
