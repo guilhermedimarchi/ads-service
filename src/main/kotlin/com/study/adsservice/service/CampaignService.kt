@@ -13,5 +13,4 @@ class CampaignService {
     fun findById(id: String): Optional<Campaign> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }

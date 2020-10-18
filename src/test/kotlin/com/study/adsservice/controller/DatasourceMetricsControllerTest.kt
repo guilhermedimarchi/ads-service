@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.study.adsservice.model.Datasource
 import com.study.adsservice.model.Metric
 import com.study.adsservice.model.Summary
-import com.study.adsservice.service.MetricsService
 import com.study.adsservice.service.DatasourceService
+import com.study.adsservice.service.MetricService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -35,7 +35,7 @@ class DatasourceMetricsControllerTest {
     private lateinit var datasourceService: DatasourceService
 
     @MockBean
-    private lateinit var metricsService: MetricsService
+    private lateinit var metricService: MetricService
 
     @Nested
     inner class GivenExistingDatasource {
@@ -52,44 +52,44 @@ class DatasourceMetricsControllerTest {
 
         @Test
         fun `should return metrics for a given datasource`() {
-            given(metricsService.getMetricsByDatasourceId(id)).willReturn(metrics)
+            given(metricService.getMetricsByDatasourceId(id)).willReturn(metrics)
             mockMvc.perform(get("/datasources/$id/metrics"))
                     .andExpect(content().string(mapper.writeValueAsString(metrics)))
                     .andExpect(status().isOk)
 
-            verify(metricsService, times(1)).getMetricsByDatasourceId(id)
+            verify(metricService, times(1)).getMetricsByDatasourceId(id)
         }
 
         @Test
         fun `should accept query parameters when fetching metrics`() {
-            given(metricsService.getMetricsByDatasourceId(id, params)).willReturn(metrics)
+            given(metricService.getMetricsByDatasourceId(id, params)).willReturn(metrics)
             mockMvc.perform(get("/datasources/$id/metrics?from=20190127&to=20190315&campaigns=1,2"))
                     .andExpect(content().string(mapper.writeValueAsString(metrics)))
                     .andExpect(status().isOk)
 
-            verify(metricsService).getMetricsByDatasourceId(id, params)
+            verify(metricService).getMetricsByDatasourceId(id, params)
         }
 
         @Test
         fun `should return metrics summary for a given datasource`() {
-            given(metricsService.getMetricsSummaryByDatasourceId(id)).willReturn(summary)
+            given(metricService.getMetricsSummaryByDatasourceId(id)).willReturn(summary)
 
             mockMvc.perform(get("/datasources/$id/summary"))
                     .andExpect(content().string(mapper.writeValueAsString(summary)))
                     .andExpect(status().isOk)
 
-            verify(metricsService, times(1)).getMetricsSummaryByDatasourceId(id)
+            verify(metricService, times(1)).getMetricsSummaryByDatasourceId(id)
         }
 
         @Test
         fun `should accept query parameters when fetching summary`() {
-            given(metricsService.getMetricsSummaryByDatasourceId(id, params)).willReturn(summary)
+            given(metricService.getMetricsSummaryByDatasourceId(id, params)).willReturn(summary)
 
             mockMvc.perform(get("/datasources/$id/summary?from=20190127&to=20190315&campaigns=1,2"))
                     .andExpect(content().string(mapper.writeValueAsString(summary)))
                     .andExpect(status().isOk)
 
-            verify(metricsService, times(1)).getMetricsSummaryByDatasourceId(id, params)
+            verify(metricService, times(1)).getMetricsSummaryByDatasourceId(id, params)
         }
     }
 
@@ -108,7 +108,7 @@ class DatasourceMetricsControllerTest {
             mockMvc.perform(get("/datasources/$unknownId/metrics"))
                     .andExpect(status().isNotFound)
 
-            verify(metricsService, times(0)).getMetricsByDatasourceId(unknownId)
+            verify(metricService, times(0)).getMetricsByDatasourceId(unknownId)
         }
 
         @Test
@@ -116,7 +116,7 @@ class DatasourceMetricsControllerTest {
             mockMvc.perform(get("/datasources/$unknownId/summary"))
                     .andExpect(status().isNotFound)
 
-            verify(metricsService, times(0)).getMetricsSummaryByDatasourceId(unknownId)
+            verify(metricService, times(0)).getMetricsSummaryByDatasourceId(unknownId)
         }
     }
 }

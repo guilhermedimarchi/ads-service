@@ -5,7 +5,7 @@ import com.study.adsservice.model.Campaign
 import com.study.adsservice.model.Metric
 import com.study.adsservice.model.Summary
 import com.study.adsservice.service.CampaignService
-import com.study.adsservice.service.MetricsService
+import com.study.adsservice.service.MetricService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -35,7 +35,7 @@ class CampaignMetricsControllerTest {
     private lateinit var campaignService: CampaignService
 
     @MockBean
-    private lateinit var metricsService: MetricsService
+    private lateinit var metricService: MetricService
 
     @Nested
     inner class GivenExistingCampaign {
@@ -50,24 +50,24 @@ class CampaignMetricsControllerTest {
 
         @Test
         fun `should return metrics for a given datasource`() {
-            given(metricsService.getMetricsByCampaignId(id)).willReturn(metrics)
+            given(metricService.getMetricsByCampaignId(id)).willReturn(metrics)
             mockMvc.perform(get("/campaigns/$id/metrics"))
                     .andExpect(content().string(mapper.writeValueAsString(metrics)))
                     .andExpect(status().isOk)
 
-            verify(metricsService, times(1)).getMetricsByCampaignId(id)
+            verify(metricService, times(1)).getMetricsByCampaignId(id)
         }
 
         @Test
         fun `should return metrics summary for a given datasource`() {
             val summary = Summary(100,10,10)
-            given(metricsService.getMetricsSummaryByCampaignId(id)).willReturn(summary)
+            given(metricService.getMetricsSummaryByCampaignId(id)).willReturn(summary)
 
             mockMvc.perform(get("/campaigns/$id/summary"))
                     .andExpect(content().string(mapper.writeValueAsString(summary)))
                     .andExpect(status().isOk)
 
-            verify(metricsService, times(1)).getMetricsSummaryByCampaignId(id)
+            verify(metricService, times(1)).getMetricsSummaryByCampaignId(id)
         }
     }
 
@@ -86,7 +86,7 @@ class CampaignMetricsControllerTest {
             mockMvc.perform(get("/campaigns/$unknownId/metrics"))
                     .andExpect(status().isNotFound)
 
-            verify(metricsService, times(0)).getMetricsByCampaignId(unknownId)
+            verify(metricService, times(0)).getMetricsByCampaignId(unknownId)
         }
 
         @Test
@@ -94,7 +94,7 @@ class CampaignMetricsControllerTest {
             mockMvc.perform(get("/campaigns/$unknownId/summary"))
                     .andExpect(status().isNotFound)
 
-            verify(metricsService, times(0)).getMetricsSummaryByCampaignId(unknownId)
+            verify(metricService, times(0)).getMetricsSummaryByCampaignId(unknownId)
         }
     }
 

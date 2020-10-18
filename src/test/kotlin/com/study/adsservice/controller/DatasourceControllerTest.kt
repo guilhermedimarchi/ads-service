@@ -1,15 +1,14 @@
 package com.study.adsservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.study.adsservice.model.Campaign
 import com.study.adsservice.model.Datasource
 import com.study.adsservice.service.DatasourceService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
-import org.mockito.Mockito
-import org.mockito.Mockito.*
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean

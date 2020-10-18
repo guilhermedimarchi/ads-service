@@ -7,7 +7,7 @@ import com.study.adsservice.model.Summary
 import org.springframework.stereotype.Service
 
 @Service
-class MetricsService() {
+class MetricService() {
 
     fun getMetricsByDatasourceId(dsId: String, params: Map<String, String> = emptyMap()): List<Metric> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
