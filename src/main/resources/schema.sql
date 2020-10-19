@@ -1,12 +1,12 @@
 CREATE TABLE `campaign` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `datasource` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
