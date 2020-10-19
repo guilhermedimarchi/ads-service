@@ -4,7 +4,7 @@ Using H2 as in Memory Database for simplicity of this example.
 
 For real world I would suggest something like https://www.timescale.com/ (relational db for time series). 
 
-### Hot to build and run
+### How to build and run
 ```./gradlew clean bootRun```
 
 or
