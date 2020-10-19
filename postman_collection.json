@@ -67,7 +67,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/metrics?datasourceId=1&campaignId=2&from=2019-06-01&until=2019-06-03",
+					"raw": "localhost:8080/metrics?datasourceId=1&campaignId=1&from=2019-11-12&until=2019-12-01",
 					"host": [
 						"localhost"
 					],
@@ -82,15 +82,15 @@
 						},
 						{
 							"key": "campaignId",
-							"value": "2"
+							"value": "1"
 						},
 						{
 							"key": "from",
-							"value": "2019-06-01"
+							"value": "2019-11-12"
 						},
 						{
 							"key": "until",
-							"value": "2019-06-03"
+							"value": "2019-12-01"
 						}
 					]
 				}
@@ -103,7 +103,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/metrics/summary?datasourceId=1&campaignId=2&from=2019-06-01&until=2019-06-03",
+					"raw": "localhost:8080/metrics/summary?datasourceId=1&campaignId=1&from=2019-11-12&until=2019-12-01",
 					"host": [
 						"localhost"
 					],
@@ -119,15 +119,15 @@
 						},
 						{
 							"key": "campaignId",
-							"value": "2"
+							"value": "1"
 						},
 						{
 							"key": "from",
-							"value": "2019-06-01"
+							"value": "2019-11-12"
 						},
 						{
 							"key": "until",
-							"value": "2019-06-03"
+							"value": "2019-12-01"
 						}
 					]
 				}
