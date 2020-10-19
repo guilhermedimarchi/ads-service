@@ -15,7 +15,7 @@ class CampaignService(private val repository: CampaignRepository) {
 
     fun findById(id: Long): Optional<CampaignDTO> {
         val campaign = repository.findById(id)
-        if(campaign.isEmpty)
+        if(!campaign.isPresent)
             return Optional.empty()
         return Optional.of(CampaignDTO.fromCampaign(campaign.get()))
     }

@@ -16,7 +16,7 @@ class DatasourceService(private val repository: DatasourceRepository) {
 
     fun findById(id: Long): Optional<DatasourceDTO> {
         val datasource = repository.findById(id)
-        if(datasource.isEmpty)
+        if(!datasource.isPresent)
             return Optional.empty()
         return Optional.of(DatasourceDTO.fromDatasource(datasource.get()))
     }
